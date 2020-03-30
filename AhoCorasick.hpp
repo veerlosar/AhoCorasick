@@ -87,6 +87,7 @@ public: //TODO: eventually make it private
             int node = queue.front();
             queue.erase(queue.begin());
             int failState = fail[node];
+            // TODO: clean the code from unnecessary looping now, since goToID is there
             for (int i = 0; i < 256; ++i) {
 
                 if (goToFunction[node][i] != -1) {
@@ -105,7 +106,7 @@ public: //TODO: eventually make it private
             }
         }
     }
-
+public:
     void saveFSA() {
 
         std::ofstream f;
