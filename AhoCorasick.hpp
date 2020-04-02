@@ -2,24 +2,27 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-//#include <FileManager.hpp>
+#include <FileManager.hpp>
 
-
+// TODO BIG: find away to get only printable chars from UTF-8
+// TODO ANOTHER BIG: clean arrays from the states, which are useless and empty
 class AhoCorasick {
 
 public:
-    AhoCorasick(std::vector<std::string> vocab) {
-        vocabulary = vocab;
+    AhoCorasick(std::string input, std::string json) {
+        inputFile = input;
+        jsonFile = json;
     }
 
-public: //TODO: eventually make it private
+private:
 
     std::vector<std::string> vocabulary;
+    std::string inputFile;
+    std::string jsonFile;
     int numberOfStates = 1;
     std::vector<int> finals;
     std::vector<int> fail;
     std::vector<std::vector<int>> goToFunction;
-    std::vector<std::vector<int>> goToID;
     std::vector<std::vector<std::string>> output;
 
 
@@ -50,13 +53,12 @@ public: //TODO: eventually make it private
                     goToFunction[fromState][letter] = numberOfStates++;
                 }
 
-                goToID[fromState].push_back(letter);
                 // after creating a new transition, next transition will begin from the new state, e.g. 1
                 fromState = goToFunction[fromState][letter];
             }
             // after iteration over all the chars of the word is finished, the last fromState becomes a final state
             finals[fromState] = 1;
-            output[fromState].push_back(word);
+            output[fromState].push_back(word); // TODO:  keep in mind that IDs are not unique
         }
         // all the characters that are not included into the vocabulary will have a transition back to 0
         for (int s = 0; s < 256; ++s) {
@@ -64,8 +66,6 @@ public: //TODO: eventually make it private
                 goToFunction[0][s] = 0;
             }
         }
-        // TODO GOOD THING: save indices of goToFunctions in std::vectors, where the indices are not empty. Should run faster like this
-        // TODO: for output the correct indices are finals. Check that out once again though.
 
     }
 
@@ -87,7 +87,6 @@ public: //TODO: eventually make it private
             int node = queue.front();
             queue.erase(queue.begin());
             int failState = fail[node];
-            // TODO: clean the code from unnecessary looping now, since goToID is there
             for (int i = 0; i < 256; ++i) {
 
                 if (goToFunction[node][i] != -1) {
@@ -100,60 +99,29 @@ public: //TODO: eventually make it private
                     fail[child] = goToFunction[failState][i];
                     queue.push_back(child);
                     if (!output[fail[child]].empty()) {
-                        output[child].insert(output[child].begin(), output[fail[child]].begin(), output[fail[child]].end());
+                        output[child].insert(output[child].begin(),
+                                output[fail[child]].begin(),
+                                output[fail[child]].end());
+                        finals[child] = 1; //
                     }
                 }
             }
         }
+        fail[0] = 0;
     }
-public:
-    void saveFSA() {
 
-        std::ofstream f;
-        f.open("FSA.json"); //TODO: rename file properly
-        std::cout << "Saving AhoCorasick to a file..." << "\n";
-        f << "[\n";
-        for (int i = 0; i < goToFunction.size(); ++i) {
-            f << "{\n";
-            f << "index : " << i << ",\n";
-            f << "final : " << finals[i] << ",\n";
-            f << "fail : " << fail[i] << ",\n";
-            if (!goToID[i].empty()) {
-                f << "transitions : {";
-                for (int id : goToID[i]) {
-                    f << (char)id << ":" << goToFunction[i][id] << ",";
-                }
-                f << "},\n";
-            } else {
-                f << "transitions : " << 0 << ",\n";
-            }
-            if (finals[i] != 0) {
-                f << "outputs : [";
-                for (std::string s : output[i]) {
-                    f << s << ", ";
-                }
-                f << "]}\n";
-            } else {
-                f << "outputs : " << 0 << "\n";
-            }
-            if (i == goToFunction.size()-1) {
-                f << "}\n";
-            } else {f << "},\n";}
-        }
-        f << "]";
-        f.close();
-    }
 
 public:
 
-    void buildFunctions() {
+    std::vector<std::string> buildFunctions() {
 
+        FileManager fm(inputFile);
+        vocabulary = fm.getVocabulary();
         // finding the maximal number of states, which is the sumed length of all words in vocabulary
         int length = findLength();
         // initialising a goToFunction array with "length" rows and 256 columns
         // 256 is for all possible number of characters
-        goToFunction.resize(length, std::vector<int>(256));
-        goToID.resize(length);
+        goToFunction.resize(length, std::vector<int>(256, -1));
         // array for final states
         finals.resize(length, 0);
         // array for failure function
@@ -162,7 +130,9 @@ public:
         output.resize(length);
         buildGoTo();
         buildFailure();
-        saveFSA();
+        fm.saveJSON(jsonFile, goToFunction, finals, output, fail);
+
+        return vocabulary;
     }
 
 };
