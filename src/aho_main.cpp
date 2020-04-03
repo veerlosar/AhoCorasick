@@ -8,29 +8,41 @@
 
 int main(int argc, char** argv) {
 
+ // defining variables for provided arguments
     std::string trainingFile;
     std::string jsonFile;
     std::string searchFile;
 
-
+    // If number of arguments is not 4: ERROR
     if (argc != 4) {
         std::cerr << "Invalid number of arguments.\n" << "Make sure you provided the following:\n" <<
-        "<path>/<training_file>.txt\n" << "<path>/<file_to_save_model>.json\n" << "<path>/<text_to_search>.txt\n\n" <<
-        "File for training should contain only one word per line.\n";
+                  "<path>/<training_file>.txt\n" << "<path>/<file_to_save_model>.json\n\n" <<
+                  "File for training should contain only one word per line.\n";
         exit(1);
     } else {
 
-        trainingFile = argv[1];
-        jsonFile = argv[2];
-        searchFile = argv[3];
+        // if the number of arguments is correct and the mode is -train,
+        if (std::string(argv[1]) == "-train") {
+
+            // call AhoCorasick to build the functions and save FSA
+            trainingFile = argv[2];
+            jsonFile = argv[3];
+            AhoCorasick aho(trainingFile, jsonFile);
+            aho.buildFunctions();
+
+        } else if (std::string(argv[1]) == "-find") {
+           // if the mode is -find, find learnt words in the text file
+            jsonFile = argv[2];
+            searchFile = argv[3];
+            Finder finder(jsonFile, searchFile);
+            finder.findWords();
+
+        } else {
+            // if the first argument is none of the two: ERROR
+            std::cerr << "Invalid first argument.\n" << "Make sure it's either -train or -find\n";
+            exit(2);
+        }
     }
-
-    AhoCorasick aho(trainingFile, jsonFile);
-    aho.buildFunctions();
-
-   Finder finder(jsonFile, searchFile);
-   finder.findWords();
-
 
     exit(0);
 }
