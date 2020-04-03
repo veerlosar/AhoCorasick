@@ -19,15 +19,15 @@ $ tar xvzf file.tar.gz
 ```
 Navigate to the root folder of the project and execute the following: 
 ```console
-AhoCorasick$ make
+$ make
 ```
 The project build will start and documentation will be extracted into the .html file. To see the documentation in browser run: 
 ```console
-AhoCorasick$ <yourBrowserName> doc/html/index.html
+$ <yourBrowserName> doc/html/index.html
 ```
 For running the tests execute the following: 
 ```console
-AhoCorasick$ make tests
+$ make tests
 ```
 
 ## Running the program
@@ -35,18 +35,18 @@ AhoCorasick$ make tests
 
 Running the program in a training mode involves building go-to, failure and output functions for the finite-state machine given the vocabulary .txt file, which contains one word per line. In the end resulting model will be saved in the provided .json file. To execute the training mode the following command should be executed: 
 ```console
-AhoCorasick$ bin/aho_main -train your_vocabulary.txt model.json
+$ bin/aho_main -train your_vocabulary.txt model.json
 ```
 If the build was successful, the program will output: 
 ```console
-AhoCorasick$ Succesfully saved model into given JSON.
+$ Succesfully saved model into given JSON.
 ```
 The built machine is now ready to search the given words in the text:
 ```console
-AhoCorasick$ bin/aho_main -find model.json text_to_search.txt
+$ bin/aho_main -find model.json text_to_search.txt
 ```
 If the search was successful, it will output the results in the following format: 
 ```console
-AhoCorasick$ Search file: <fileName>	Word: <found word>	Line: <line>
+$ Search file: <fileName>	Word: <found word>	Line: <line>
 ```
 
