@@ -3,8 +3,8 @@
 #include <Finder.hpp>
 #include <iostream>
 // Lomaeva Maria, 793197
-// c++ 7.5.0
-// Ubuntu 18.04.4 LTS int argc, char** argv
+// c++ 7.5.0, g++ 10.0.1
+// Ubuntu 18.04.4 LTS, macOS Mojave 10.14.6
 
 int main(int argc, char** argv) {
 

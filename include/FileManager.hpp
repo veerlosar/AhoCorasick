@@ -5,8 +5,8 @@
 #include <vector>
 
 // Lomaeva Maria, 793197
-// c++ 7.5.0
-// Ubuntu 18.04.4 LTS
+// c++ 7.5.0, g++ 10.0.1
+// Ubuntu 18.04.4 LTS, macOS Mojave 10.14.6
 
 /** Class reads and writes the files provided from other instances.
  *  Public constructor is called once the object of the class is defined.
@@ -81,20 +81,22 @@ public:
         for (int i = 0; i < goToFunction.size(); ++i) {
 
             // saving information about the state
-            f << "index: " << i << ",\n";
-            f << "final: " << finals[i] << ",\n";
-            f << "fail: " << fail[i] << ",\n";
+            f << '"' << "index" << '"' << ": " << i << ",\n";
+            f << '"' << "final" << '"' << ": " << finals[i] << ",\n";
+            f << '"' << "fail" << '"' << ": " << fail[i] << ",\n";
 
             // saving state's transitions
-            f << "transitions:{";
+            f << '"' << "transitions" << '"' << ":{";
             std::string s = "";
+
+            // avoiding control characters and starting from the char 33
             for (int j = 33; j < goToFunction[i].size(); ++j) {
                 if (goToFunction[i][j] != -1) {
-                    if (j == 34 | j == 39 ) {continue;}
+                    if (j == 34 | j == 92 ) {continue;}
                     if (s.find(" : ") != std::string::npos) {
-                        f << ",\n" << (char)j << " : " << goToFunction[i][j];
+                        f << ",\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
                     } else {
-                        f << "\n" << (char)j << " : " << goToFunction[i][j];
+                        f << "\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
                     }
                     s += " : ";
                 }
@@ -102,15 +104,15 @@ public:
 
             // saving outputs of the state, if any
             if (finals[i] != 0) {
-                f << "outputs:[\n";
+                f << '"' << "outputs" << '"' << ":[\n";
                 for (int k = 0; k < output[i].size(); ++k) {
                     if (k == output[i].size()-1) {
-                        f << output[i][k];
-                    } else {f << output[i][k] << " ,\n";}
+                        f << '"' << output[i][k] << '"' ;
+                    } else {f << '"' << output[i][k] << '"' << " ,\n";}
                 }
                 f << "\n]";
             } else {
-                f << "outputs:[\n" << "]";
+                f << '"' << "outputs" << '"' << ":[\n" << "]";
             }
             if (i == goToFunction.size()-1) {
                 f << "\n";

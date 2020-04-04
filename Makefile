@@ -14,7 +14,7 @@ all: aho_main
 # Receipe for aho_main
 aho_main : include/AhoCorasick.hpp include/Finder.hpp include/FileManager.hpp src/aho_main.cpp Makefile
 	$(CPPCOMP) -O3 -std=c++11 $(DEFINES) -o bin/aho_main -I include/ src/aho_main.cpp
-	
+
 	@echo AhoCorasick has been succesfully built.
 
 # Installation

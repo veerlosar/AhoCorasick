@@ -2,10 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cctype>
 
 // Lomaeva Maria, 793197
-// c++ 7.5.0
-// Ubuntu 18.04.4 LTS
+// c++ 7.5.0, g++ 10.0.1
+// Ubuntu 18.04.4 LTS, macOS Mojave 10.14.6
 
 /** The goal of the class is to look for the words in the provided .txt file.
  * Finder reads FSA from .json into the variable and performs the search,
@@ -20,11 +21,10 @@ class Finder {
 
 
 public:
-    Finder(std::string json, std::string search) { //, std::vector<std::string> w
+    Finder(std::string json, std::string search) {
 
         jsonFile = json;
         searchFile = search;
-        //words = w;
     }
 
 private:
@@ -59,22 +59,13 @@ private:
         std::vector<std::string> yields;
     };
 
-    /** Struct Line aligns number of line in the file with its string indices.
-     * Contains the number of line and maximal string index it contains.*/
-    struct Line {
-        int line_id;
-        int max_string_id;
-    };
 
 
     std::string jsonFile;
     std::string searchFile;
-    std::string text;
-    //std::vector<std::string> words;
     std::vector<Output> outputs;
     std::vector<Transition> transitions;
     std::vector<State> states;
-    std::vector<Line> lines;
 
 
     /** Function reads FSA saved in json file into the class variables.
@@ -108,22 +99,31 @@ private:
         Output output;
         int id = 0;
 
+        // Encountered problem while reading .json:
+        // spaces weren not read correctly. The first intuitive explanation would be the fact,
+        // that '>>' avoids white spaces. However, the problem remained even if the json_in.get() was used.
+        // Therefore, spaces (char 32) were excluded from the file.
+
+        std::cout << "Reading FSA from .json file...\n";
         while (json_in) {
             // actions performed depending on the line
+            // reading the json file between spaces (faster than char by char)
             json_in >> s;
-            if (s == "index:") {
+
+            if (s == "," | s == "{") {continue;}
+            else if (s.find("index") != std::string::npos) {
                 json_in >> state.id;
                 trans.from = state.id;
                 output.state_id = state.id;
-            } else if (s == "final:") {
+            } else if (s.find("final") != std::string::npos) {
                 json_in >> state.final;
-            } else if (s == "fail:") {
+            } else if (s.find("fail") != std::string::npos) {
                 json_in >> state.failure;
-            } else if (s == "transitions:{") {
+            } else if (s.find("transitions") != std::string::npos) {
                 while (s != "},") {
                     json_in >> s;
                     if (s != "},") {
-                        trans.letter = s[0];
+                        trans.letter = s[1];
                         json_in >> s;
                         json_in >> trans.next;
                         // once the block with transitions is read,
@@ -133,11 +133,11 @@ private:
                         json_in >> s;
                     }
                 }
-            } else if (s == "outputs:[") {
+            } else if (s.find("outputs") != std::string::npos) {
                 while (s != "]," & s != "]") {
                     json_in >> s;
                     if (s != "]," & s != "]") {
-                        output.yields.push_back(s);
+                        output.yields.push_back(s.substr(1, s.size()-2));
                         json_in >> s;
                     }
                 }
@@ -148,7 +148,6 @@ private:
                 states.push_back(state);
             }
         }
-
     }
 
 
@@ -178,55 +177,43 @@ private:
     }
 
 
-    /** Function reads the search file line by line,
-     * memorising the line number and the length the text reaches on it.
-     * Function results in an error if file is corrupt or doesn't exist.
-     */
-    void cleanText() {
-        std::ifstream search_in(searchFile.c_str());
-        if (!search_in) {
-            std::cerr << "Couldnt open Search file. Make sure it's not corrupted.";
-            exit(1);
-        }
-        std::string line;
-        text = "";
-        Line f_line;
-        int line_id = 0;
-
-        int len = 0;
-
-        while (search_in) {
-            std::getline(search_in, line);
-            if (line != "") {
-
-                // line is added to the current text
-                text += line + " ";
-                // line number is saved
-                f_line.line_id = line_id;
-                // the current length of the current string
-                f_line.max_string_id = text.size()-1;  //len + line.size();
-                lines.push_back(f_line); //len = len + line.size() + 1;
-                line_id++;
-            }
-        }
-    }
-
-    /** Function looks for the number of line given the
-     * current string index. Error occurs if there is no
-     * line containing the current index of the string.
+    /** Function performs the search on the given line.
      *
      * @param string_id Current index in the string.
      * @return Number of the line accordingly.
      */
-    int findLine(int string_id) {
+    std::string matchOutput(int current, std::string result, std::string line, int line_id) {
 
-        for (int i = 0; i < lines.size(); ++i) {
-            if (string_id <= lines[i].max_string_id) {
-                return lines[i].line_id;
+        std::string match;
+
+        for (int i = 0; i < line.size(); ++i)
+        {
+            // looking for the next state
+            current = findNext(current, line[i]);
+            match += line[i];
+
+            if ((outputs[current].state_id != current)|(states[current].id != current)) {
+                std::cerr << "ERROR: current state doesn't match the ID in outputs or in states";
+                exit(1);
+            } else if (states[current].final == 0) {
+                continue; // continue the search if current state doesn't yield anything
+            } else {
+                // try to match current word with the outputs the current state yields
+                for (std::string out : outputs[current].yields) {
+
+                    // if match found...
+                    if (match.find(out) != std::string::npos) {
+                        if (result.find("|"+ out + "| ") == std::string::npos) {
+                            // output the result
+                            std::cout << "\n" << "Search file: " << searchFile << "\t" << "Word: " <<
+                                      out << "\t" << "Line: " << line_id << "\n";
+                            result += "|"+ out + "| ";
+                        }
+                    }
+                }
             }
         }
-        std::cerr << "String ID was too big for the given number of lines";
-        exit(2);
+        return result;
     }
 
 public:
@@ -240,38 +227,25 @@ public:
         // function reads saved FSA
         readJSON();
 
-        // memorises information about the lines in the file
-        cleanText();
-
+        std::string line;
         int current = 0;
-        std::string match;
-        // starts the search on the file
-        for (int i = 0; i < text.size(); ++i)
-        {
-            // looking for the next state
-            current = findNext(current, text[i]);
-            match += text[i];
+        std::string result;
+        int line_id = 1;
 
-            if ((outputs[current].state_id != current)|(states[current].id != current)) {
-                std::cerr << "ERROR: current state doesn't match the ID in outputs or in states";
-                exit(1);
-            } else if (states[current].final == 0) {
-                continue; // continue the search if current state doesn't yield anything
-            } else {
-                // try to match current word with the outputs the current state yields
-                for (std::string out : outputs[current].yields) {
-
-                    // if match found...
-                    if (match.find(out) != std::string::npos) {
-                        int line_n = findLine(i)+1;
-                        // TODO: output only the first occurences
-                        //TODO: find a way to tell if program didnt find any matches in the text
-                        // output the result
-                        std::cout << "\n" << "Search file: " << searchFile << "\t" << "Word: " <<
-                        out << "\t" << "Line: " << line_n << "\n";
-                    }
-                }
+        std::ifstream search_in(searchFile.c_str());
+        if (!search_in) {
+            std::cerr << "Couldnt open Search file. Make sure it's not corrupted.\n";
+            exit(1);
+        }
+        while (search_in) {
+            std::getline(search_in, line);
+            if (!line.empty()) {
+                result = matchOutput(current, result, line, line_id);
+                line_id++;
             }
+        }
+        if (result.empty()) {
+            std::cout << "Couldn't find any word in the given search file\n";
         }
     }
 };
