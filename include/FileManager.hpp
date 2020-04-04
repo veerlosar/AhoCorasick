@@ -1,7 +1,6 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <vector>
 
 // Lomaeva Maria, 793197
@@ -36,7 +35,7 @@ public:
 
         std::ifstream text_in(file_name.c_str());
         if (!text_in) {
-            std::cerr << "Couldnt open the file";
+            std::cerr << "Couldnt open the file\n";
             exit(1);
         }
 
@@ -79,44 +78,46 @@ public:
         std::cout << "Saving AhoCorasick to a emptyJsonFile..." << "\n";
         f << "{\n";
         for (int i = 0; i < goToFunction.size(); ++i) {
+            // only writing the states whih reachable
+            if (fail[i] != -1) {
+                // saving information about the state
+                f << '"' << "index" << '"' << ": " << i << ",\n";
+                f << '"' << "final" << '"' << ": " << finals[i] << ",\n";
+                f << '"' << "fail" << '"' << ": " << fail[i] << ",\n";
 
-            // saving information about the state
-            f << '"' << "index" << '"' << ": " << i << ",\n";
-            f << '"' << "final" << '"' << ": " << finals[i] << ",\n";
-            f << '"' << "fail" << '"' << ": " << fail[i] << ",\n";
+                // saving state's transitions
+                f << '"' << "transitions" << '"' << ":{";
+                // string helps avoiding trailing commas by saving ":" occurences
+                std::string str;
 
-            // saving state's transitions
-            f << '"' << "transitions" << '"' << ":{";
-            std::string s = "";
-
-            // avoiding control characters and starting from the char 33
-            for (int j = 33; j < goToFunction[i].size(); ++j) {
-                if (goToFunction[i][j] != -1) {
-                    if (j == 34 | j == 92 ) {continue;}
-                    if (s.find(" : ") != std::string::npos) {
-                        f << ",\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
-                    } else {
-                        f << "\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
+                for (int j = 32; j < goToFunction[i].size(); ++j) {
+                    if (goToFunction[i][j] != -1) {
+                        // e.g. "char" : state,
+                        if (str.find(" : ") != std::string::npos) {
+                            f << ",\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
+                        } else {
+                            f << "\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
+                        }
+                        str += " : ";
                     }
-                    s += " : ";
-                }
-            } f << "\n},\n";
+                } f << "\n},\n";
 
-            // saving outputs of the state, if any
-            if (finals[i] != 0) {
-                f << '"' << "outputs" << '"' << ":[\n";
-                for (int k = 0; k < output[i].size(); ++k) {
-                    if (k == output[i].size()-1) {
-                        f << '"' << output[i][k] << '"' ;
-                    } else {f << '"' << output[i][k] << '"' << " ,\n";}
+                // saving outputs of the state, if any
+                if (finals[i] != 0) {
+                    f << '"' << "outputs" << '"' << ":[\n";
+                    for (int k = 0; k < output[i].size(); ++k) {
+                        if (k == output[i].size()-1) {
+                            f << '"' << output[i][k] << '"' ;
+                        } else {f << '"' << output[i][k] << '"' << " ,\n";}
+                    }
+                    f << "\n]";
+                } else {
+                    f << '"' << "outputs" << '"' << ":[\n" << "]";
                 }
-                f << "\n]";
-            } else {
-                f << '"' << "outputs" << '"' << ":[\n" << "]";
+                if (i == goToFunction.size()-1) {
+                    f << "\n";
+                } else {f << ",\n";}
             }
-            if (i == goToFunction.size()-1) {
-                f << "\n";
-            } else {f << ",\n";}
         }
         f << "}";
         // closing the file, logging the information

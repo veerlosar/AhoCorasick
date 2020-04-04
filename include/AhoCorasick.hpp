@@ -19,8 +19,6 @@
  * @param input String containing the name of the file.
  * @param json String with the name of the file to save FSA into.
  */
-// TODO BIG: find away to get only printable chars from UTF-8
-// TODO ANOTHER BIG: clean arrays from the states, which are useless and empty
 class AhoCorasick {
 
 public:
@@ -157,7 +155,7 @@ private:
                 }
             }
         }
-        // making 0 state fail to itself. This in case some chars are not saved correctly,
+        // making 0 state fail to itself. This in case some chars are not saved/read/recognised correctly,
         // but still present in the search file. Having 0 failing into -1 could result in
         // interruption of the search in the middle of the string.
         fail[0] = 0;
@@ -168,13 +166,13 @@ public:
 
     /** Function coordinates the build of finite-state machine.
      */
-    void buildFunctions() {
+    int buildFunctions() {
 
         // reading provided file, saving it into vocabulary
         FileManager fm(inputFile);
         vocabulary = fm.getVocabulary();
 
-        // finding the maximal number of states
+        // finding the maximum number of states
         int length = findLength();
 
         // initialising a goToFunction array with "length" rows and 192 columns
@@ -192,6 +190,7 @@ public:
         buildGoTo();
         buildFailure();
         fm.saveJSON(jsonFile, goToFunction, finals, output, fail);
+        return length;
 
     }
 
