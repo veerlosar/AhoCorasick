@@ -22,8 +22,8 @@ install: aho_main man
 	sudo cp bin/aho_main /usr/local/bin
 
 # HTML and LateX documentation
-documentation: doc/sample_text.conf
-	doxygen doc/sample_text.conf
+documentation: doc/Doxyfile
+	doxygen doc/Doxyfile
 
 man:
 	sudo cp doc/aho_main.man.1 /usr/local/man/man1
@@ -31,7 +31,7 @@ man:
 
 tests:	aho_main
 	# 10000 german words and german text
-	-bin/aho_main $(TRAIN) data/deutsch10000.txt data/FSA.json
+	-bin/aho_main $(TRAIN) data/deutsch_train.txt data/FSA.json
 	-bin/aho_main $(FIND) data/FSA.json data/search_deutsch.txt
 
 # cleaning

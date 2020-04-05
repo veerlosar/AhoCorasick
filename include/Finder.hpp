@@ -4,9 +4,12 @@
 #include <vector>
 #include <cctype>
 
+
 // Lomaeva Maria, 793197
 // c++ 7.5.0, g++ 10.0.1
 // Ubuntu 18.04.4 LTS, macOS Mojave 10.14.6
+
+class FileManager;
 
 /** The goal of the class is to look for the words in the provided .txt file.
  * Finder reads FSA from .json into the variable and performs the search,

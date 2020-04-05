@@ -1,0 +1,75 @@
+\hypertarget{classFileManager}{}\section{File\+Manager Class Reference}
+\label{classFileManager}\index{File\+Manager@{File\+Manager}}
+
+
+{\ttfamily \#include $<$File\+Manager.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileManager_a5b55a1626f54b1b7c97b8c70d1fe843c}\label{classFileManager_a5b55a1626f54b1b7c97b8c70d1fe843c}} 
+{\bfseries File\+Manager} (std\+::string file)
+\item 
+std\+::vector$<$ std\+::string $>$ \hyperlink{classFileManager_ac9b807a2698e538246c349023e7b07d1}{get\+Vocabulary} ()
+\item 
+void \hyperlink{classFileManager_aa3fd9c8bba7be2102df0ddaefa57f65f}{save\+J\+S\+ON} (std\+::string empty\+Json\+File, std\+::vector$<$ std\+::vector$<$ int $>$$>$ go\+To\+Function, std\+::vector$<$ int $>$ finals, std\+::vector$<$ std\+::vector$<$ std\+::string $>$$>$ output, std\+::vector$<$ int $>$ fail)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFileManager_a75fac6c1f92a1c2ee6fe0d51d7bbcd90}\label{classFileManager_a75fac6c1f92a1c2ee6fe0d51d7bbcd90}} 
+std\+::string {\bfseries file\+\_\+name}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class reads and writes the files provided from other instances. Public constructor is called once the object of the class is defined.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file} & The name of the file with the words F\+SA will be trained on. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classFileManager_ac9b807a2698e538246c349023e7b07d1}\label{classFileManager_ac9b807a2698e538246c349023e7b07d1}} 
+\index{File\+Manager@{File\+Manager}!get\+Vocabulary@{get\+Vocabulary}}
+\index{get\+Vocabulary@{get\+Vocabulary}!File\+Manager@{File\+Manager}}
+\subsubsection{\texorpdfstring{get\+Vocabulary()}{getVocabulary()}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ File\+Manager\+::get\+Vocabulary (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Function derives the vocabulary from the file with the given words. Error will occur if the file won\textquotesingle{}t open by any reason. Function assumes file contains only one word per line.
+
+\begin{DoxyReturn}{Returns}
+A vector with the words (vocabulary). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classFileManager_aa3fd9c8bba7be2102df0ddaefa57f65f}\label{classFileManager_aa3fd9c8bba7be2102df0ddaefa57f65f}} 
+\index{File\+Manager@{File\+Manager}!save\+J\+S\+ON@{save\+J\+S\+ON}}
+\index{save\+J\+S\+ON@{save\+J\+S\+ON}!File\+Manager@{File\+Manager}}
+\subsubsection{\texorpdfstring{save\+J\+S\+O\+N()}{saveJSON()}}
+{\footnotesize\ttfamily void File\+Manager\+::save\+J\+S\+ON (\begin{DoxyParamCaption}\item[{std\+::string}]{empty\+Json\+File,  }\item[{std\+::vector$<$ std\+::vector$<$ int $>$$>$}]{go\+To\+Function,  }\item[{std\+::vector$<$ int $>$}]{finals,  }\item[{std\+::vector$<$ std\+::vector$<$ std\+::string $>$$>$}]{output,  }\item[{std\+::vector$<$ int $>$}]{fail }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Function saves built F\+SA into json empty\+Json\+File. Errors occur if system isn\textquotesingle{}t able to open the file.
+
+
+\begin{DoxyParams}{Parameters}
+{\em empty\+Json\+File} & File to save F\+SA into. \\
+\hline
+{\em go\+To\+Function} & Vector with the saved transitions for each state. \\
+\hline
+{\em finals} & Vector containing information about finality of the states. \\
+\hline
+{\em output} & Vector with the outputs of each state. \\
+\hline
+{\em fail} & Vector with the failure states of each state.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector with the words (vocabulary). 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/File\+Manager.\+hpp\end{DoxyCompactItemize}

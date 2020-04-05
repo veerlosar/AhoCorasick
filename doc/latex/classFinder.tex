@@ -1,0 +1,128 @@
+\hypertarget{classFinder}{}\section{Finder Class Reference}
+\label{classFinder}\index{Finder@{Finder}}
+
+
+{\ttfamily \#include $<$Finder.\+hpp$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structFinder_1_1Output}{Output}
+\item 
+struct \hyperlink{structFinder_1_1State}{State}
+\item 
+struct \hyperlink{structFinder_1_1Transition}{Transition}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFinder_ad20ecc3cbd3536c698d36ab64d2324d7}\label{classFinder_ad20ecc3cbd3536c698d36ab64d2324d7}} 
+{\bfseries Finder} (std\+::string json, std\+::string search)
+\item 
+void \hyperlink{classFinder_a5d406ff13d529df6d714e35effd0772f}{find\+Words} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classFinder_a21b8b64fb105f001ddb72a019389a764}{read\+J\+S\+ON} ()
+\item 
+int \hyperlink{classFinder_acf713e3cb4233451f239bcd4631caf44}{find\+Next} (int current\+State, char input\+Char)
+\item 
+std\+::string \hyperlink{classFinder_a1e517320c9df087be10d680f50d89a69}{match\+Output} (int current, std\+::string result, std\+::string line, int line\+\_\+id)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classFinder_a82eb95d01fbc5b86675145f3be95a70d}\label{classFinder_a82eb95d01fbc5b86675145f3be95a70d}} 
+std\+::string {\bfseries json\+File}
+\item 
+\mbox{\Hypertarget{classFinder_a6cd7c23ef9f68d9388b21f0ee1e07239}\label{classFinder_a6cd7c23ef9f68d9388b21f0ee1e07239}} 
+std\+::string {\bfseries search\+File}
+\item 
+\mbox{\Hypertarget{classFinder_a7e0a99653375c8b0aa78b85b7be98ce9}\label{classFinder_a7e0a99653375c8b0aa78b85b7be98ce9}} 
+std\+::vector$<$ \hyperlink{structFinder_1_1Output}{Output} $>$ {\bfseries outputs}
+\item 
+\mbox{\Hypertarget{classFinder_a3646c9cc90f97f8333f90c98c648222a}\label{classFinder_a3646c9cc90f97f8333f90c98c648222a}} 
+std\+::vector$<$ \hyperlink{structFinder_1_1Transition}{Transition} $>$ {\bfseries transitions}
+\item 
+\mbox{\Hypertarget{classFinder_a8e0f30c06b0957de327e230a9e418ce3}\label{classFinder_a8e0f30c06b0957de327e230a9e418ce3}} 
+std\+::vector$<$ \hyperlink{structFinder_1_1State}{State} $>$ {\bfseries states}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The goal of the class is to look for the words in the provided .txt file. \hyperlink{classFinder}{Finder} reads F\+SA from .json into the variable and performs the search, outputting all the occurences of the words in the file along with given lines. Public constructor is called when defining a class object.
+
+
+\begin{DoxyParams}{Parameters}
+{\em json} & The file to read F\+SA from. \\
+\hline
+{\em search} & The file to perform a search on. \\
+\hline
+{\em w} & Vocabulary of the words to look for in a search file. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classFinder_acf713e3cb4233451f239bcd4631caf44}\label{classFinder_acf713e3cb4233451f239bcd4631caf44}} 
+\index{Finder@{Finder}!find\+Next@{find\+Next}}
+\index{find\+Next@{find\+Next}!Finder@{Finder}}
+\subsubsection{\texorpdfstring{find\+Next()}{findNext()}}
+{\footnotesize\ttfamily int Finder\+::find\+Next (\begin{DoxyParamCaption}\item[{int}]{current\+State,  }\item[{char}]{input\+Char }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Function returns the next state given the current state and the character. If there is no transition from the current state, it will return the failure state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+State} & \hyperlink{structFinder_1_1State}{State} where the search is currently located. \\
+\hline
+{\em inpu\+Char} & Current character of the string, on which search is being performed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next state (integer state\+\_\+id). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classFinder_a5d406ff13d529df6d714e35effd0772f}\label{classFinder_a5d406ff13d529df6d714e35effd0772f}} 
+\index{Finder@{Finder}!find\+Words@{find\+Words}}
+\index{find\+Words@{find\+Words}!Finder@{Finder}}
+\subsubsection{\texorpdfstring{find\+Words()}{findWords()}}
+{\footnotesize\ttfamily void Finder\+::find\+Words (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Function looks for the vocabulary words in the given text file. It outputs the name of the file, the word and the number of the line all separated by tab. \mbox{\Hypertarget{classFinder_a1e517320c9df087be10d680f50d89a69}\label{classFinder_a1e517320c9df087be10d680f50d89a69}} 
+\index{Finder@{Finder}!match\+Output@{match\+Output}}
+\index{match\+Output@{match\+Output}!Finder@{Finder}}
+\subsubsection{\texorpdfstring{match\+Output()}{matchOutput()}}
+{\footnotesize\ttfamily std\+::string Finder\+::match\+Output (\begin{DoxyParamCaption}\item[{int}]{current,  }\item[{std\+::string}]{result,  }\item[{std\+::string}]{line,  }\item[{int}]{line\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Function performs the search on the given line.
+
+
+\begin{DoxyParams}{Parameters}
+{\em string\+\_\+id} & Current index in the string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of the line accordingly. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classFinder_a21b8b64fb105f001ddb72a019389a764}\label{classFinder_a21b8b64fb105f001ddb72a019389a764}} 
+\index{Finder@{Finder}!read\+J\+S\+ON@{read\+J\+S\+ON}}
+\index{read\+J\+S\+ON@{read\+J\+S\+ON}!Finder@{Finder}}
+\subsubsection{\texorpdfstring{read\+J\+S\+O\+N()}{readJSON()}}
+{\footnotesize\ttfamily void Finder\+::read\+J\+S\+ON (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Function reads F\+SA saved in json file into the class variables. Assumes json looks like the following\+: \begin{DoxyVerb}      index: 4,
+      final: 1,
+      fail:  3,
+      transitions:{
+      t : 5
+      },
+      outputs:[
+      nicht
+      ]
+\end{DoxyVerb}
+ Function results in an error if the file is corrupted or doesn\textquotesingle{}t exist. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/Finder.\+hpp\end{DoxyCompactItemize}

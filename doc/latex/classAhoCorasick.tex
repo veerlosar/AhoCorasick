@@ -1,0 +1,102 @@
+\hypertarget{classAhoCorasick}{}\section{Aho\+Corasick Class Reference}
+\label{classAhoCorasick}\index{Aho\+Corasick@{Aho\+Corasick}}
+
+
+{\ttfamily \#include $<$Aho\+Corasick.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_a7f5b25765ba7290b155bb09bc41948a4}\label{classAhoCorasick_a7f5b25765ba7290b155bb09bc41948a4}} 
+{\bfseries Aho\+Corasick} (std\+::string input, std\+::string json)
+\item 
+void \hyperlink{classAhoCorasick_a4562e5c069beb443c120856445e159c8}{build\+Functions} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classAhoCorasick_a7ef8e2eeeb8ce582283ee73198325f1b}{find\+Length} ()
+\item 
+void \hyperlink{classAhoCorasick_a54a087f0c1434bc9b753d8ab2d0dad1c}{build\+Go\+To} ()
+\item 
+void \hyperlink{classAhoCorasick_a8dae847b2d60d7844ae1677026f4eab5}{build\+Failure} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_ae1cdee1728e71d6f655c8741b817885d}\label{classAhoCorasick_ae1cdee1728e71d6f655c8741b817885d}} 
+std\+::vector$<$ std\+::string $>$ {\bfseries vocabulary}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_a89e2087e9f8578e0abb494b8fca9dff5}\label{classAhoCorasick_a89e2087e9f8578e0abb494b8fca9dff5}} 
+std\+::string {\bfseries input\+File}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_a6c0cb26993e6621b79e1bf9789c05268}\label{classAhoCorasick_a6c0cb26993e6621b79e1bf9789c05268}} 
+std\+::string {\bfseries json\+File}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_a05555f17e68db9e365beba7e0da27afa}\label{classAhoCorasick_a05555f17e68db9e365beba7e0da27afa}} 
+int {\bfseries number\+Of\+States} = 1
+\item 
+\mbox{\Hypertarget{classAhoCorasick_a4d72b01f0b7cc5bea7332fda95e947e0}\label{classAhoCorasick_a4d72b01f0b7cc5bea7332fda95e947e0}} 
+int {\bfseries number\+Of\+Chars} = 192
+\item 
+\mbox{\Hypertarget{classAhoCorasick_a70392b02ae0eda74648ce764759ebefd}\label{classAhoCorasick_a70392b02ae0eda74648ce764759ebefd}} 
+std\+::vector$<$ int $>$ {\bfseries finals}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_a5d4397d63ac27b704671974af7b80605}\label{classAhoCorasick_a5d4397d63ac27b704671974af7b80605}} 
+std\+::vector$<$ int $>$ {\bfseries fail}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_aa39fadd7513e7d410fcc8252f684d52e}\label{classAhoCorasick_aa39fadd7513e7d410fcc8252f684d52e}} 
+std\+::vector$<$ std\+::vector$<$ int $>$ $>$ {\bfseries go\+To\+Function}
+\item 
+\mbox{\Hypertarget{classAhoCorasick_af745171b0eb86c983463f92c30bdbdec}\label{classAhoCorasick_af745171b0eb86c983463f92c30bdbdec}} 
+std\+::vector$<$ std\+::vector$<$ std\+::string $>$ $>$ {\bfseries output}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class builds finite-\/state machine with the following functions\+: go-\/to (transition function), failure function and output function. The automata is built based on the vocabulary derived from the file provided through command line. Once machine is built, it is passed to the File Manager to be saved in .json format. Public constructor is called to receive and initialise parameters.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & String containing the name of the file. \\
+\hline
+{\em json} & String with the name of the file to save F\+SA into. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classAhoCorasick_a8dae847b2d60d7844ae1677026f4eab5}\label{classAhoCorasick_a8dae847b2d60d7844ae1677026f4eab5}} 
+\index{Aho\+Corasick@{Aho\+Corasick}!build\+Failure@{build\+Failure}}
+\index{build\+Failure@{build\+Failure}!Aho\+Corasick@{Aho\+Corasick}}
+\subsubsection{\texorpdfstring{build\+Failure()}{buildFailure()}}
+{\footnotesize\ttfamily void Aho\+Corasick\+::build\+Failure (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Failure function will tell where to continue the search, if the current state doesn\textquotesingle{}t go to any state with the current character. \mbox{\Hypertarget{classAhoCorasick_a4562e5c069beb443c120856445e159c8}\label{classAhoCorasick_a4562e5c069beb443c120856445e159c8}} 
+\index{Aho\+Corasick@{Aho\+Corasick}!build\+Functions@{build\+Functions}}
+\index{build\+Functions@{build\+Functions}!Aho\+Corasick@{Aho\+Corasick}}
+\subsubsection{\texorpdfstring{build\+Functions()}{buildFunctions()}}
+{\footnotesize\ttfamily void Aho\+Corasick\+::build\+Functions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Function coordinates the build of finite-\/state machine. \mbox{\Hypertarget{classAhoCorasick_a54a087f0c1434bc9b753d8ab2d0dad1c}\label{classAhoCorasick_a54a087f0c1434bc9b753d8ab2d0dad1c}} 
+\index{Aho\+Corasick@{Aho\+Corasick}!build\+Go\+To@{build\+Go\+To}}
+\index{build\+Go\+To@{build\+Go\+To}!Aho\+Corasick@{Aho\+Corasick}}
+\subsubsection{\texorpdfstring{build\+Go\+To()}{buildGoTo()}}
+{\footnotesize\ttfamily void Aho\+Corasick\+::build\+Go\+To (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Function builds the go-\/to functions. In other words, it memorises the transitions each state has from with a given character. \mbox{\Hypertarget{classAhoCorasick_a7ef8e2eeeb8ce582283ee73198325f1b}\label{classAhoCorasick_a7ef8e2eeeb8ce582283ee73198325f1b}} 
+\index{Aho\+Corasick@{Aho\+Corasick}!find\+Length@{find\+Length}}
+\index{find\+Length@{find\+Length}!Aho\+Corasick@{Aho\+Corasick}}
+\subsubsection{\texorpdfstring{find\+Length()}{findLength()}}
+{\footnotesize\ttfamily int Aho\+Corasick\+::find\+Length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Finds the summed length of all the words in the given file. This will also define the maximum possible number of states the future F\+SA will contain. Based on that the vectors of the functions will be initialised.
+
+\begin{DoxyReturn}{Returns}
+Summed length of all the words in vocabulary. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/Aho\+Corasick.\+hpp\end{DoxyCompactItemize}

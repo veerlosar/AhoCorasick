@@ -4,9 +4,6 @@
 #include <vector>
 #include <FileManager.hpp>
 
-// Lomaeva Maria, 793197
-// c++ 7.5.0
-// Ubuntu 18.04.4 LTS
 
 /** Class builds finite-state machine with the following functions:
  * go-to (transition function), failure function and output function.
@@ -166,7 +163,7 @@ public:
 
     /** Function coordinates the build of finite-state machine.
      */
-    int buildFunctions() {
+    void buildFunctions() {
 
         // reading provided file, saving it into vocabulary
         FileManager fm(inputFile);
@@ -190,8 +187,11 @@ public:
         buildGoTo();
         buildFailure();
         fm.saveJSON(jsonFile, goToFunction, finals, output, fail);
-        return length;
 
+        std::vector<int>().swap(finals);
+        std::vector<int>().swap(fail);
+        std::vector<std::vector<int>>().swap(goToFunction);
+        std::vector<std::vector<std::string>>().swap(output);
     }
 
 };

@@ -2,10 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <tuple>
 
-// Lomaeva Maria, 793197
-// c++ 7.5.0, g++ 10.0.1
-// Ubuntu 18.04.4 LTS, macOS Mojave 10.14.6
 
 /** Class reads and writes the files provided from other instances.
  *  Public constructor is called once the object of the class is defined.
@@ -53,6 +51,36 @@ public:
         return vocabulary;
     }
 
+    void makeTransitions(std::ofstream& infile, std::vector<int> goToVector) {
+
+        infile << '"' << "transitions" << '"' << ":{";
+        // string helps avoiding trailing commas by saving ":" occurences
+        std::string str;
+        for (int j = 32; j < goToVector.size(); ++j) {
+            if (goToVector[j] != -1) {
+                // e.g. "char" : state,
+                if (str.find(" : ") != std::string::npos) {
+                    infile << ",\n" << '"' << (char)j << '"' << " : " << goToVector[j];
+                } else {
+                    infile << "\n" << '"' << (char)j << '"' << " : " << goToVector[j];
+                }
+                str += " : ";
+            }
+        } infile << "\n},\n";
+    }
+
+    void makeOutputs(std::ofstream& infile, std::vector<std::string> output) {
+        infile << '"' << "outputs" << '"' << ":[\n";
+
+        for (int k = 0; k < output.size(); ++k) {
+            if (k == output.size()-1) {
+                infile << '"' << output[k] << '"' ;
+            } else {infile << '"' << output[k] << '"' << " ,\n";}
+        }
+        infile << "\n]";
+    }
+
+
     /** Function saves built FSA into json emptyJsonFile.
      * Errors occur if system isn't able to open the file.
      *
@@ -84,33 +112,12 @@ public:
                 f << '"' << "index" << '"' << ": " << i << ",\n";
                 f << '"' << "final" << '"' << ": " << finals[i] << ",\n";
                 f << '"' << "fail" << '"' << ": " << fail[i] << ",\n";
-
-                // saving state's transitions
-                f << '"' << "transitions" << '"' << ":{";
-                // string helps avoiding trailing commas by saving ":" occurences
-                std::string str;
-
-                for (int j = 32; j < goToFunction[i].size(); ++j) {
-                    if (goToFunction[i][j] != -1) {
-                        // e.g. "char" : state,
-                        if (str.find(" : ") != std::string::npos) {
-                            f << ",\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
-                        } else {
-                            f << "\n" << '"' << (char)j << '"' << " : " << goToFunction[i][j];
-                        }
-                        str += " : ";
-                    }
-                } f << "\n},\n";
+                // saving transitions
+                makeTransitions(f, goToFunction[i]);
 
                 // saving outputs of the state, if any
                 if (finals[i] != 0) {
-                    f << '"' << "outputs" << '"' << ":[\n";
-                    for (int k = 0; k < output[i].size(); ++k) {
-                        if (k == output[i].size()-1) {
-                            f << '"' << output[i][k] << '"' ;
-                        } else {f << '"' << output[i][k] << '"' << " ,\n";}
-                    }
-                    f << "\n]";
+                    makeOutputs(f, output[i]);
                 } else {
                     f << '"' << "outputs" << '"' << ":[\n" << "]";
                 }
