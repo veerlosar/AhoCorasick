@@ -1,5 +1,4 @@
 # Makefile for AhoCorasick
-# Maria Lomaeva, 793197
 
 # Defining variables
 CPPCOMP = g++
